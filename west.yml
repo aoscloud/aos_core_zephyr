@@ -31,6 +31,10 @@ manifest:
       remote: aoscloud
       revision: develop
 
+    - name: aos_core_api
+      remote: aoscloud
+      revision: develop
+
     - name: nanopb
       remote: zephyrproject-rtos
       revision: dc4deed54fd4c7e1935e3b6387eedf21bb45dc38
