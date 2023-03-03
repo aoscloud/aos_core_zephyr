@@ -40,6 +40,10 @@ manifest:
       revision: dc4deed54fd4c7e1935e3b6387eedf21bb45dc38
       path: modules/lib/nanopb
 
+    - name: zephyr-xenlib
+      remote: xen-troops
+      revision: wip_zephyr_dom0
+
     - name: tinycrypt
       remote: zephyrproject-rtos
       revision: 3e9a49d2672ec01435ffbf0d788db6d95ef28de0
