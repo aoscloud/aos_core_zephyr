@@ -1,0 +1,39 @@
+# Copyright (C) 2023 Renesas Electronics Corporation.
+# Copyright (C) 2023 EPAM Systems, Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+
+config DOMD_ID
+	int "Dom D id"
+	default 1
+
+config SM_VCHAN_PATH
+	string "Path to the SM vchan"
+	default "/vchan/sm"
+
+config CONNECTION_TIMEOUT_SEC
+	int "Vchan connection timeout"
+	default 5
+
+config NODE_ID
+	string "Node id"
+	default "NODE_0"
+
+config NODE_TYPE
+	string "Nodde type"
+	default "NODE_TYPE1"
+
+config NUM_CPU
+	int "Count of CPUs for domain with Zephyr"
+	default 1
+
+config TOTAL_RAM
+	int "Total RAM of the domain"
+	default 204800
+
+config PARTITION_SIZE
+	int "Partition size"
+	default 209715200
+
+source "Kconfig"
