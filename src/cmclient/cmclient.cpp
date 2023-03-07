@@ -48,16 +48,44 @@ aos::Error CMClient::Init(LauncherItf& launcher)
 
 aos::Error CMClient::InstancesRunStatus(const aos::Array<aos::InstanceStatus>& instances)
 {
-    (void)instances;
+    aos::LockGuard lock(mSendMutex);
 
-    return aos::ErrorEnum::eNone;
+    mOutgoingMessage.which_SMOutgoingMessage = servicemanager_v3_SMOutgoingMessages_run_instances_status_tag;
+    mOutgoingMessage.SMOutgoingMessage.run_instances_status
+        = servicemanager_v3_RunInstancesStatus servicemanager_v3_RunInstancesStatus_init_zero;
+    mOutgoingMessage.SMOutgoingMessage.run_instances_status.instances_count = instances.Size();
+
+    for (size_t i = 0; i < instances.Size(); i++) {
+        mOutgoingMessage.SMOutgoingMessage.run_instances_status.instances[i] = InstanceStatusToPB(instances[i]);
+    }
+
+    auto err = SendPbMessageToVchan();
+    if (!err.IsNone()) {
+        LOG_ERR() << "Can't send run instance status: " << err;
+    }
+
+    return err;
 }
 
 aos::Error CMClient::InstancesUpdateStatus(const aos::Array<aos::InstanceStatus>& instances)
 {
-    (void)instances;
+    aos::LockGuard lock(mSendMutex);
 
-    return aos::ErrorEnum::eNone;
+    mOutgoingMessage.which_SMOutgoingMessage = servicemanager_v3_SMOutgoingMessages_update_instances_status_tag;
+    mOutgoingMessage.SMOutgoingMessage.update_instances_status
+        = servicemanager_v3_UpdateInstancesStatus servicemanager_v3_UpdateInstancesStatus_init_zero;
+    mOutgoingMessage.SMOutgoingMessage.update_instances_status.instances_count = instances.Size();
+
+    for (size_t i = 0; i < instances.Size(); i++) {
+        mOutgoingMessage.SMOutgoingMessage.update_instances_status.instances[i] = InstanceStatusToPB(instances[i]);
+    }
+
+    auto err = SendPbMessageToVchan();
+    if (!err.IsNone()) {
+        LOG_ERR() << "Can't send update instance status: " << err;
+    }
+
+    return err;
 }
 
 /***********************************************************************************************************************
@@ -253,4 +281,25 @@ aos::Error CMClient::CalculateSha256(const aos::Buffer& buffer, size_t msgSize, 
     }
 
     return aos::ErrorEnum::eNone;
+}
+
+servicemanager_v3_InstanceStatus CMClient::InstanceStatusToPB(const aos::InstanceStatus& instanceStatus) const
+{
+    servicemanager_v3_InstanceStatus pbStatus = servicemanager_v3_InstanceStatus_init_zero;
+
+    pbStatus.aos_version = instanceStatus.mAosVersion;
+    pbStatus.has_instance = true;
+    pbStatus.instance.instance = instanceStatus.mInstanceIdent.mInstance;
+    strncpy(
+        pbStatus.instance.service_id, instanceStatus.mInstanceIdent.mServiceID, sizeof(pbStatus.instance.service_id));
+    strncpy(
+        pbStatus.instance.subject_id, instanceStatus.mInstanceIdent.mSubjectID, sizeof(pbStatus.instance.subject_id));
+    strncpy(pbStatus.run_state, instanceStatus.mRunState.ToString(), sizeof(pbStatus.run_state));
+
+    if (!instanceStatus.mError.IsNone()) {
+        pbStatus.has_error_info = true;
+        strncpy(pbStatus.error_info.message, instanceStatus.mError.ToString(), sizeof(pbStatus.error_info.message));
+    }
+
+    return pbStatus;
 }

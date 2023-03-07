@@ -76,12 +76,13 @@ private:
     servicemanager_v3_SMOutgoingMessages                         mOutgoingMessage;
     aos::Mutex                                                   mSendMutex;
 
-    void       ProcessMessages();
-    void       ConnectToCM();
-    void       SendNodeConfiguration();
-    aos::Error SendPbMessageToVchan();
-    aos::Error SendBufferToVchan(vch_handle* vChanHandler, const uint8_t* buffer, size_t msgSize);
-    aos::Error CalculateSha256(const aos::Buffer& buffer, size_t size, SHA256Digest& digest);
+    void                             ProcessMessages();
+    void                             ConnectToCM();
+    void                             SendNodeConfiguration();
+    aos::Error                       SendPbMessageToVchan();
+    aos::Error                       SendBufferToVchan(vch_handle* vChanHandler, const uint8_t* buffer, size_t msgSize);
+    aos::Error                       CalculateSha256(const aos::Buffer& buffer, size_t size, SHA256Digest& digest);
+    servicemanager_v3_InstanceStatus InstanceStatusToPB(const aos::InstanceStatus& instanceStatus) const;
 };
 
 #endif
