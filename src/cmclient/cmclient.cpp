@@ -29,11 +29,12 @@ CMClient::~CMClient()
     mThread.Join();
 }
 
-aos::Error CMClient::Init(LauncherItf& launcher)
+aos::Error CMClient::Init(LauncherItf& launcher, ResourceManager& resourceManager)
 {
     LOG_DBG() << "Initialize CM client";
 
     mLauncher = &launcher;
+    mResourceManager = &resourceManager;
 
     auto err = mThread.Run([this](void*) {
         ConnectToCM();

@@ -20,6 +20,8 @@ extern "C" {
 #include <vch.h>
 }
 
+#include "resourcemanager/resourcemanager.hpp"
+
 using SHA256Digest = uint8_t[32];
 
 /**
@@ -45,9 +47,10 @@ public:
     /**
      * Initializes CM client instance.
      * @param launcher instance launcher.
+     * @param resourceManager resourcemanager instance.
      * @return aos::Error.
      */
-    aos::Error Init(aos::sm::launcher::LauncherItf& launcher);
+    aos::Error Init(aos::sm::launcher::LauncherItf& launcher, ResourceManager& resourceManager);
 
     /**
      * Sends instances run status.
@@ -67,6 +70,7 @@ public:
 
 private:
     aos::sm::launcher::LauncherItf*                              mLauncher;
+    ResourceManager*                                             mResourceManager;
     aos::Thread<>                                                mThread;
     atomic_t                                                     mFinishReadTrigger;
     vch_handle                                                   mSMvchanHandler;

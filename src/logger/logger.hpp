@@ -23,6 +23,7 @@ public:
         eCMClient,
         eRunner,
         eStorage,
+        eResourceMgr,
     };
 
     /**
