@@ -21,6 +21,8 @@ manifest:
     - name: zephyr
       url-base: https://github.com/zephyrproject-rtos
 
+    - name: amoi
+      url-base: https://github.com/oleksiimoisieiev/
   projects:
     - name: zephyr
       remote: xen-troops
@@ -32,8 +34,8 @@ manifest:
       revision: develop
 
     - name: zephyr-xenlib
-      remote: xen-troops
-      revision: wip_zephyr_dom0
+      remote: amoi
+      revision: xrun
 
     - name: littlefs
       remote: zephyr
