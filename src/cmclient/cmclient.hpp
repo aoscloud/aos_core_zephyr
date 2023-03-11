@@ -87,6 +87,9 @@ private:
     aos::Error                       SendBufferToVchan(vch_handle* vChanHandler, const uint8_t* buffer, size_t msgSize);
     aos::Error                       CalculateSha256(const aos::Buffer& buffer, size_t size, SHA256Digest& digest);
     servicemanager_v3_InstanceStatus InstanceStatusToPB(const aos::InstanceStatus& instanceStatus) const;
+    void                             ProcessGetUnitConfigStatus();
+    void                             ProcessCheckUnitConfig();
+    void                             ProcessSetUnitConfig();
 };
 
 #endif

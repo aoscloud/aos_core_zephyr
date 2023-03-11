@@ -158,12 +158,15 @@ void CMClient::ProcessMessages()
 
         switch (mIncomingMessage.which_SMIncomingMessage) {
         case servicemanager_v3_SMIncomingMessages_get_unit_config_status_tag:
+            ProcessGetUnitConfigStatus();
             break;
 
         case servicemanager_v3_SMIncomingMessages_check_unit_config_tag:
+            ProcessCheckUnitConfig();
             break;
 
         case servicemanager_v3_SMIncomingMessages_set_unit_config_tag:
+            ProcessSetUnitConfig();
             break;
 
         case servicemanager_v3_SMIncomingMessages_run_instances_tag:
@@ -303,4 +306,64 @@ servicemanager_v3_InstanceStatus CMClient::InstanceStatusToPB(const aos::Instanc
     }
 
     return pbStatus;
+}
+
+void CMClient::ProcessGetUnitConfigStatus()
+{
+    aos::LockGuard lock(mSendMutex);
+
+    mOutgoingMessage.which_SMOutgoingMessage = servicemanager_v3_SMOutgoingMessages_unit_config_status_tag;
+    mOutgoingMessage.SMOutgoingMessage.unit_config_status = servicemanager_v3_UnitConfigStatus_init_zero;
+
+    auto err
+        = mResourceManager->GetUnitConfigInfo(mOutgoingMessage.SMOutgoingMessage.unit_config_status.vendor_version);
+    if (!err.IsNone()) {
+        strcpy(mOutgoingMessage.SMOutgoingMessage.unit_config_status.error, err.ToString());
+    }
+
+    if (!(err = SendPbMessageToVchan()).IsNone()) {
+        LOG_ERR() << "Can't send unit configuration status: " << err;
+    }
+}
+
+void CMClient::ProcessCheckUnitConfig()
+{
+    auto err = mResourceManager->CheckUnitConfig(mIncomingMessage.SMIncomingMessage.check_unit_config.vendor_version,
+        mIncomingMessage.SMIncomingMessage.check_unit_config.unit_config);
+
+    aos::LockGuard lock(mSendMutex);
+
+    mOutgoingMessage.which_SMOutgoingMessage = servicemanager_v3_SMOutgoingMessages_unit_config_status_tag;
+    mOutgoingMessage.SMOutgoingMessage.unit_config_status = servicemanager_v3_UnitConfigStatus_init_zero;
+
+    strcpy(mOutgoingMessage.SMOutgoingMessage.unit_config_status.vendor_version,
+        mIncomingMessage.SMIncomingMessage.check_unit_config.vendor_version);
+    if (!err.IsNone()) {
+        strcpy(mOutgoingMessage.SMOutgoingMessage.unit_config_status.error, err.ToString());
+    }
+
+    if (!(err = SendPbMessageToVchan()).IsNone()) {
+        LOG_ERR() << "Can't send unit configuration status: " << err;
+    }
+}
+
+void CMClient::ProcessSetUnitConfig()
+{
+    auto err = mResourceManager->UpdateUnitConfig(mIncomingMessage.SMIncomingMessage.set_unit_config.vendor_version,
+        mIncomingMessage.SMIncomingMessage.set_unit_config.unit_config);
+
+    aos::LockGuard lock(mSendMutex);
+
+    mOutgoingMessage.which_SMOutgoingMessage = servicemanager_v3_SMOutgoingMessages_unit_config_status_tag;
+    mOutgoingMessage.SMOutgoingMessage.unit_config_status = servicemanager_v3_UnitConfigStatus_init_zero;
+
+    strcpy(mOutgoingMessage.SMOutgoingMessage.unit_config_status.vendor_version,
+        mIncomingMessage.SMIncomingMessage.set_unit_config.vendor_version);
+    if (!err.IsNone()) {
+        strcpy(mOutgoingMessage.SMOutgoingMessage.unit_config_status.error, err.ToString());
+    }
+
+    if ((err = SendPbMessageToVchan()).IsNone()) {
+        LOG_ERR() << "Can't send unit configuration status: " << err;
+    }
 }
