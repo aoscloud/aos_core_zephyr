@@ -5,11 +5,13 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-cmake_minimum_required(VERSION 3.13.1)
+cmake_minimum_required(VERSION 3.20.0)
 
 find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 
 include($ENV{ZEPHYR_BASE}/cmake/app/boilerplate.cmake NO_POLICY_SCOPE)
+
+set(ZEPHYR_MODULES ${CMAKE_CURRENT_BINARY_DIR}/../../zephyr-xenlib)
 
 project(aoszephyrapp)
 
@@ -25,7 +27,7 @@ zephyr_include_directories(${CMAKE_CURRENT_BINARY_DIR} src)
 
 target_sources(
     app PRIVATE src/main.cpp src/logger/logger.cpp src/app/app.cpp src/cmclient/cmclient.cpp src/runner/runner.cpp
-                src/storage/storage.cpp
+                src/storage/storage.cpp src/resourcemanager/resourcemanager.cpp
 )
 
 # ######################################################################################################################
@@ -39,6 +41,8 @@ if(NOT GIT_FOUND)
 endif()
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeModules)
+
+find_package(CoreAPI)
 
 add_custom_target(
     version
@@ -88,6 +92,8 @@ ExternalProject_Add(
 )
 
 # aossm
+
+generate_api(${CMAKE_CURRENT_BINARY_DIR}/../../aos_core_api)
 
 file(MAKE_DIRECTORY ${AOSCORE_BUILD_DIR}/include)
 

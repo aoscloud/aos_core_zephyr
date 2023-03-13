@@ -1,4 +1,8 @@
 tests:
   aoszephyrapp.cmclient:
-    type: unit
+    build_only: false
     tags: cmclient
+    timeout: 500
+    integration_platforms:
+      - native_posix
+    platform_allow: native_posix
