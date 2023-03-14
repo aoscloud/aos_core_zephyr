@@ -22,7 +22,7 @@ aos::Error CMClient::Init(LauncherItf& launcher)
 
     mLauncher = &launcher;
 
-    auto err = mThread.Run();
+    auto err = mThread.Run([this](void*) { ProcessMessages(); });
     if (!err.IsNone()) {
         return err;
     }

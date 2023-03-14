@@ -8,6 +8,7 @@
 #include <zephyr/sys/__assert.h>
 #include <zephyr/sys/printk.h>
 
+#include <aos/common/string.hpp>
 #include <aos/common/version.hpp>
 
 #include "app/app.hpp"
@@ -24,7 +25,7 @@ int main(void)
     auto& app = App::Get();
 
     auto err = app.Init();
-    __ASSERT(err.IsNone(), "Error initializing application: %s", err.ToString());
+    __ASSERT(err.IsNone(), "Error initializing application: %s", aos::StaticString<128>().Convert(err).CStr());
 
     return 0;
 }

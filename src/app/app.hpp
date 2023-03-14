@@ -5,6 +5,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+#ifndef APP_HPP_
+#define APP_HPP_
+
 #include <aos/common/error.hpp>
 #include <aos/common/noncopyable.hpp>
 #include <aos/sm/launcher.hpp>
@@ -38,3 +41,5 @@ private:
     Runner                      mRunner;
     aos::sm::launcher::Launcher mLauncher;
 };
+
+#endif

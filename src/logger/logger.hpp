@@ -31,7 +31,7 @@ public:
     static void Init();
 
 private:
-    static void LogCallback(aos::LogModule module, aos::LogLevel level, const char* message);
+    static void LogCallback(aos::LogModule module, aos::LogLevel level, const aos::String& message);
 };
 
 #endif

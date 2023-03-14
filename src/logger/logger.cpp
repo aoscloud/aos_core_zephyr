@@ -18,31 +18,31 @@
     {                                                                                                                  \
         LOG_MODULE_REGISTER(name, CONFIG_LOG_DEFAULT_LEVEL);                                                           \
                                                                                                                        \
-        static void LogCallback(aos::LogLevel level, const char* message)                                              \
+        static void LogCallback(aos::LogLevel level, const aos::String& message)                                       \
         {                                                                                                              \
             switch (level.GetValue()) {                                                                                \
             case aos::LogLevelEnum::eDebug:                                                                            \
-                LOG_DBG("%s", message);                                                                                \
+                LOG_DBG("%s", message.CStr());                                                                         \
                                                                                                                        \
                 break;                                                                                                 \
                                                                                                                        \
             case aos::LogLevelEnum::eInfo:                                                                             \
-                LOG_INF("%s", message);                                                                                \
+                LOG_INF("%s", message.CStr());                                                                         \
                                                                                                                        \
                 break;                                                                                                 \
                                                                                                                        \
             case aos::LogLevelEnum::eWarning:                                                                          \
-                LOG_WRN("%s", message);                                                                                \
+                LOG_WRN("%s", message.CStr());                                                                         \
                                                                                                                        \
                 break;                                                                                                 \
                                                                                                                        \
             case aos::LogLevelEnum::eError:                                                                            \
-                LOG_ERR("%s", message);                                                                                \
+                LOG_ERR("%s", message.CStr());                                                                         \
                                                                                                                        \
                 break;                                                                                                 \
                                                                                                                        \
             default:                                                                                                   \
-                LOG_ERR("Unknown log level received");                                                                 \
+                LOG_ERR("Unknown log level received: %s", level.ToString().CStr());                                    \
                                                                                                                        \
                 break;                                                                                                 \
             }                                                                                                          \
@@ -68,7 +68,7 @@ void Logger::Init()
  * Public
  **********************************************************************************************************************/
 
-void Logger::LogCallback(aos::LogModule module, aos::LogLevel level, const char* message)
+void Logger::LogCallback(aos::LogModule module, aos::LogLevel level, const aos::String& message)
 {
     switch (static_cast<int>(module.GetValue())) {
     case static_cast<int>(Module::eApp):
@@ -97,6 +97,6 @@ void Logger::LogCallback(aos::LogModule module, aos::LogLevel level, const char*
         break;
 
     default:
-        __ASSERT(false, "Log from unknown module received: %d", module.GetValue());
+        __ASSERT(false, "Log from unknown module received: %s", module.ToString().CStr());
     }
 }
