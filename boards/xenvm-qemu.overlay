@@ -1,0 +1,57 @@
+
+#include <mem.h>
+
+/ {
+  	fstab {
+		compatible = "zephyr,fstab";
+		storage: storage {
+			compatible = "zephyr,fstab,littlefs";
+			mount-point = "/lfs";
+			partition = <&storage_partition>;
+			automount;
+			read-size = <16>;
+			prog-size = <16>;
+			cache-size = <64>;
+			lookahead-size = <32>;
+			block-cycles = <512>;
+		};
+	};
+	flashcontroller0: flashcontroller {
+		compatible = "zephyr,sim-flash";
+		label = "FLASH_SIMULATOR";
+		#address-cells = <1>;
+		#size-cells = <1>;
+		erase-value = <0xff>;
+		flash_sim0: flash_sim@0 {
+			compatible = "soc-nv-flash";
+			reg = <0x00000000 DT_SIZE_M(10)>;
+			erase-block-size = <1024>;
+			write-block-size = <4>;
+			partitions {
+				compatible = "fixed-partitions";
+				#address-cells = <1>;
+				#size-cells = <1>;
+			/*
+			 * Storage partition will be used by FCB/LittleFS/NVS
+			 * if enabled.
+			 */
+				storage_partition: partition@1000 {
+					label = "storage";
+					reg = <0x00001000 0x00300000>;
+				};
+				slot0_partition: partition@301000 {
+					 label = "image-0";
+					 reg = <0x00301000 0x00010000>;
+				};
+				slot1_partition: partition@311000 {
+					 label = "image-1";
+					 reg = <0x00311000 0x00010000>;
+				};
+				eepromemu_partition: partition@321000 {
+					label = "eeprom-emu";
+					reg = <0x00321000 0x00010000>;
+				};
+			};
+		};
+	};
+};

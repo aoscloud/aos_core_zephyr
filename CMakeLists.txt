@@ -11,6 +11,16 @@ find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 
 include($ENV{ZEPHYR_BASE}/cmake/app/boilerplate.cmake NO_POLICY_SCOPE)
 
+set(UTILS_SCRIPTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/scripts)
+if (DTC)
+  add_custom_target(
+    fix_dtb
+    DEPENDS ${ZEPHYR_FINAL_EXECUTABLE}
+    COMMAND ${UTILS_SCRIPTS_DIR}/fix_dtb.sh ${UTILS_SCRIPTS_DIR}/gicv2.tmpl ${ZEPHYR_BINARY_DIR}/virt_gicv2.dtb ${ZEPHYR_BINARY_DIR}/zephyr.bin)
+else()
+  message(WARNING "No dtc program")
+endif()
+
 project(aoszephyrapp)
 
 # ######################################################################################################################
@@ -18,6 +28,8 @@ project(aoszephyrapp)
 # ######################################################################################################################
 
 zephyr_include_directories(${CMAKE_CURRENT_BINARY_DIR} src)
+# Add prebuilt to includes so assembler can find this files
+include_directories(app PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/prebuilt)
 
 # ######################################################################################################################
 # Taget
@@ -25,7 +37,7 @@ zephyr_include_directories(${CMAKE_CURRENT_BINARY_DIR} src)
 
 target_sources(
     app PRIVATE src/main.cpp src/logger/logger.cpp src/app/app.cpp src/cmclient/cmclient.cpp src/runner/runner.cpp
-                src/storage/storage.cpp
+                src/storage/storage.cpp src/domain_bins.S
 )
 
 # ######################################################################################################################

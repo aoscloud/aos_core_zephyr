@@ -21,7 +21,7 @@ public:
      */
     CMClient()
         : mLauncher(nullptr)
-        , mThread([this](void*) { this->ProcessMessages(); })
+        , mThread()
     {
     }
 

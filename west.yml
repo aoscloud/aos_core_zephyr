@@ -18,6 +18,11 @@ manifest:
     - name: aoscloud
       url-base: https://github.com/aoscloud
 
+    - name: zephyr
+      url-base: https://github.com/zephyrproject-rtos
+
+    - name: amoi
+      url-base: https://github.com/oleksiimoisieiev/
   projects:
     - name: zephyr
       remote: xen-troops
@@ -27,3 +32,14 @@ manifest:
     - name: aos_core_lib_cpp
       remote: aoscloud
       revision: develop
+
+    - name: zephyr-xenlib
+      remote: amoi
+      revision: xrun
+
+    - name: littlefs
+      remote: zephyr
+      path: modules/fs/littlefs
+      groups:
+        - fs
+      revision: ca583fd297ceb48bced3c2548600dc615d67af24
