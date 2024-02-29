@@ -77,7 +77,7 @@ target_sources(
 target_sources_ifdef(CONFIG_NATIVE_APPLICATION app PRIVATE mocks/vch/vch.cpp mocks/xrun/xrun.cpp mocks/xstat/xstat.cpp)
 
 # Include domain IPL and dtb for xen_dom0 shield
-target_sources_ifdef(CONFIG_SHIELD_XEN_DOM0 app PRIVATE src/domains/domd/domain_bins.S)
+target_sources_ifdef(CONFIG_XEN_DOM0 app PRIVATE src/domains/domd/domain_bins.S)
 
 # Include source files for DomD support
 
