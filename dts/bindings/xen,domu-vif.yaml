@@ -1,0 +1,61 @@
+# Copyright (c) 2024 EPAM Systems
+# SPDX-License-Identifier: Apache-2.0
+
+description: Xen DomU configuration for virtual network intreface
+compatible: "xen,domu-vif"
+
+include: base.yaml
+
+properties:
+  backend_domain_id:
+    type: int
+    default: 1
+    description: |
+      Designates a backend domain ID for the device.
+      Specifies the backend domain ID which this device should attach to.
+
+  script:
+    type: string
+    default: "/etc/xen/scripts/vif-bridge"
+    description: |
+      Specifies the hotplug script to run to configure this device (e.g. to add it to
+      the relevant bridge).
+
+  mac:
+    type: string
+    required: true # TODO: Remove when MAC generation is introduced in xen-dom-mgmt
+    description: |
+      If specified then this option specifies the MAC address inside the guest of this VIF device.
+      The value is a 48-bit number represented as six groups of two hexadecimal digits, separated
+      by colons.
+
+      The default if this property is not specified is to be automatically generate a MAC address.
+
+  bridge:
+    type: string
+    default: "xenbr0"
+    description: |
+      Specifies the name of the network bridge which this VIF should be added to. The bridge must
+      be configured using your distribution's network configuration tools.
+
+  vif_type:
+    type: string
+    default: "vif"
+    description: |
+      This keyword is valid for HVM guests only.
+      Specifies the type of device to valid values are:
+
+        "ioemu" -- this device will be provided as an emulate device to the guest and
+                   also as a paravirtualised device which the guest may choose to use
+                   instead if it has suitable drivers available.
+
+        "vif"   -- this device will be provided as a paravirtualised device only.
+
+  ip:
+    type: string
+    description: |
+      Specifies the IP address for the device, the default is not to specify an IP address.
+
+      What, if any, effect this has depends on the hotplug script which is configured. A typically
+      behaviour (exhibited by the example hotplug scripts) if set might be to configure firewall
+      rules to allow only the specified IP address to be used by the guest (blocking all others).

@@ -1,0 +1,67 @@
+# Copyright (c) 2024 EPAM Systems
+# SPDX-License-Identifier: Apache-2.0
+
+description: Xen DomU configuration for virtual block device
+compatible: "xen,domu-vbd"
+
+include: base.yaml
+
+properties:
+  backend_domain_id:
+    type: int
+    default: 1
+    description: |
+      Designates a backend domain ID for the device.
+      Specifies the backend domain ID which this device should attach to.
+
+  target:
+    type: string
+    required: true
+    description: |
+      Block device or image file path.  When this is used as a path, /dev will be prepended
+      if the path doesn't start with a '/'.
+
+      Inside xenstore it is dirrectly written to 'params':
+        a free formatted string providing sufficient information for the hotplug script to attach
+        the device and provide a suitable handler (ie: a block device) for blkback to use.
+
+  script:
+    type: string
+    default: "/etc/xen/scripts/block"
+    description: |
+      Specifies that <target> is not a normal host path, but rather information to be interpreted
+      by the executable program <script>, (looked for in /etc/xen/scripts, if it doesn't contain
+      a slash).
+
+      These scripts are normally called "block-<script>".
+
+  backendtype:
+    type: string
+    default: "phy"
+    description: |
+      Specifies the backend implementation to use. Supported values: phy, tap, qdisk.
+
+      This does not affect the guest's view of the device.  It controls which software
+      implementation of the Xen backend driver us used.
+
+      Not all backend drivers support all combinations of other options. For example, "phy" does not
+      support formats other than "raw". Normally this option should not be specified, in which case
+      libxl will automatically determine the most suitable backend
+
+  vdev:
+    type: string
+    default: "xvda"
+    description: |
+      Virtual device as seen by the guest (also referred to as guest drive designation in some
+      specifications).
+
+  access:
+    type: string
+    default: "rw"
+    description: |
+      Specified access control information. Whether or not the block device is provided to the
+      guest in read-only or read-write mode depends on this attribute.
+
+      Supported values:
+        ro, r   (specifies read-only)
+        rw, w   (specifies read/write)

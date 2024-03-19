@@ -101,6 +101,18 @@ config DOMD_DTB_PATH
 	string "Location of Domain-D partial device-tree"
 	default "prebuilt/ipl.dtb"
 
+config DOMU
+	bool "Enable DomU support"
+	default y if DT_HAS_XEN_DOMU_ENABLED
+
+config DOMU_BIN_PATH
+	string "Location for Domain-U binary"
+	default "prebuilt/domu.bin"
+
+config DOMU_DTB_PATH
+	string "Location of Domain-U partial device-tree"
+	default "prebuilt/domu.dtb"
+
 config TA_DEPLOY_DIR
 	string "Location of optee TA's deploy dir"
 

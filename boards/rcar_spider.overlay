@@ -64,4 +64,35 @@
 			};
 		};
 	};
+
+	domu_configs {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		domu@2 {
+			/*
+			 * Most of the properties of this one and children nodes are default and don't appear
+			 * in the resulting dts.
+			 *
+			 * Refer to 'xen,domu.yaml', 'xen,domu-vbd.yaml' and 'xen,domu-vif.yaml' for details.
+			 */
+			compatible = "xen,domu";
+			reg = <2>;
+
+			mem_size = <DT_SIZE_M(128)>;
+			gic_version = <2>;
+
+			vbd {
+				compatible = "xen,domu-vbd";
+				target = "/dev/sda7";
+			};
+
+			vif {
+				compatible = "xen,domu-vif";
+				mac = "08:00:27:ff:cb:ce";
+			};
+
+			status = "disabled";
+		};
+	};
 };

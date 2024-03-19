@@ -1,0 +1,41 @@
+# Copyright (c) 2024 EPAM Systems
+# SPDX-License-Identifier: Apache-2.0
+
+description: Xen DomU configuration
+compatible: "xen,domu"
+
+include: base.yaml
+
+properties:
+  mem_size:
+    type: int
+    default: 0x8000000 # by default 128M
+    description: Size of the RAM given to domain
+
+  max_evtchns:
+    type: int
+    default: 10
+
+  max_vcpus:
+    type: int
+    default: 1
+
+  gnt_frames:
+    type: int
+    default: 32
+
+  max_maptrack_frames:
+    type: int
+    default: 1
+
+  gic_version:
+    type: int
+    enum:
+      - 0 # GIC Native
+      - 1 # GICv2
+      - 2 # GICv3
+    default: 1
+
+  cmdline:
+    type: string
+    default: "root=/dev/xvda rw rootwait console=hvc0 pci=pcie_bus_perf"
