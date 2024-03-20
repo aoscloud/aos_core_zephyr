@@ -309,6 +309,9 @@ struct xen_domain_cfg domd_cfg = {
     .load_image_bytes  = load_ipl_image,
     .get_image_size    = get_ipl_image_size,
     .image_info        = NULL,
+    .cmdline = "root=/dev/sda4 ro rootwait console=hvc0 clk_ignore_unused pci=pcie_bus_perf vardir.disk=/dev/sda5 "
+               "opendisk.target=/dev/sda6 opendisk.pkcs11=optee aosupdate.disk=/dev/aosvg/workdirs "
+               "aosupdate.path=um/update_rootfs aosupdate.selinux_module=/usr/share/selinux/aos/base.pp",
 
     .dtb_start = __dtb_ipl_start,
     .dtb_end   = __dtb_ipl_end,
