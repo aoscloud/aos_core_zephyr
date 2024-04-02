@@ -11,8 +11,6 @@
 extern "C" {
 #endif
 
-extern struct xen_domain_cfg domd_cfg;
-
 int create_domains();
 
 #ifdef __cplusplus
