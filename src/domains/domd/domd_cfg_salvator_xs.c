@@ -501,7 +501,8 @@ static ssize_t get_ipl_image_size(void* image_info, uint64_t* size)
     return 0;
 }
 
-struct xen_domain_cfg domd_cfg = {
+DECL_CONFIG struct xen_domain_cfg domd_cfg = {
+    .name = "salvator-xs",
     .mem_kb = 0x200000, /* 2Gb */
 
     .flags               = (XEN_DOMCTL_CDF_hvm | XEN_DOMCTL_CDF_hap | XEN_DOMCTL_CDF_iommu),
